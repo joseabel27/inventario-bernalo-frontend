@@ -1,18 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// Aca configuramos las rutas principales del sistema.
 
-function App() {
+import React from "react";
+import {Routes, Route} from "react-router-dom";
 
+import Navbar from "./components/Navbar..jsx";
+import Inventario from "./components/Inventario.jsx";
+import Ventas from "./components/Ventas.jsx";
+import Devoluciones from "./components/Devoluciones.jsx";
+
+function App(){
 
   return (
+    <>
+    {/*Barra de Navegacion*/}
+    <Navbar/>
 
-    <div>
-      <h1>Inventario Bernalo</h1>
-      <p>Bienvenido al Sistema de Gestion de Producto</p>
+    {/*Contenido segun la ruta*/}
+
+    <div className="container">
+      <Routes>
+        <Route path="/" element={<Inventario/>}/>
+        <Route path="/ventas" element = {<Ventas/>}/>
+        <Route path="/devoluciones" element = {<Devoluciones/>}/>
+      </Routes>
     </div>
-  )
+    </>
+  );
 }
 
-export default App
+export default App;
