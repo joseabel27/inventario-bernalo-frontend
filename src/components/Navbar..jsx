@@ -9,6 +9,7 @@ function Navbar(){
 
         <nav className ="navbar">
             <h1>Inventario Bernalo</h1>
+            
             <ul>
                 <li><Link to="/">Inventario</Link></li>
                 <li><Link to="/ventas">Ventas</Link></li>
