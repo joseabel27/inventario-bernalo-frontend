@@ -15,6 +15,8 @@ function Inventario() {
       .catch((error) => console.error("Error:", error));
   }, []);
 
+  console.log("Renderizando componente Inventario");
+
   return (
     <div>
       <h2>Inventario</h2>
@@ -27,6 +29,8 @@ function Inventario() {
             <th>Categoría</th>
             <th>Precio</th>
             <th>Cantidad</th>
+            <th>Ubicación</th>       
+            <th>Stock Mínimo</th>  
           </tr>
         </thead>
         <tbody>
@@ -37,6 +41,8 @@ function Inventario() {
               <td>{p.categoria}</td>
               <td>{p.precio}</td>
               <td>{p.cantidad}</td>
+              <td>{p.ubicacion}</td>
+              <td>{p.stockMinimo}</td>
             </tr>
           ))}
         </tbody>
