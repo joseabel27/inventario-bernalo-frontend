@@ -3,7 +3,7 @@
 import React from "react";
 import {Routes, Route} from "react-router-dom";
 
-import Navbar from "./components/Navbar..jsx";
+import Navbar from "./components/Navbar.jsx";
 import Inventario from "./components/Inventario.jsx";
 import Ventas from "./components/Ventas.jsx";
 import Devoluciones from "./components/Devoluciones.jsx";

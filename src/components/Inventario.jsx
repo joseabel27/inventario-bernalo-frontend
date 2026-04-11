@@ -1,57 +1,48 @@
 // MOSTRARA LOS PRODUCTOS DEL INVENTARIO
 
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Inventario() {
+  const [productos, setProductos] = useState([]);
 
-    const [productos, setProductos] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:3000/api/inventario")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Datos del backend:", data);
+        setProductos(data);
+      })
+      .catch((error) => console.error("Error:", error));
+  }, []);
 
-    useEffect(() => {
+  return (
+    <div>
+      <h2>Inventario</h2>
 
-        // Aquí mas adelante haremos la peticion del backend ( Get / api /inventario)
-        console.log("Cargar Inventario...");
-    }, []);
-
-    return (
-        <div>
-            <h2>Inventario Actual</h2>
-            <button>Agregar Producto</button>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Categoria</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th>Ubicacion</th>
-                        <th>Stock Minimo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {productos.length === 0 ? (
-                        <tr><td colSpan="6">Sin Productos Disponibles</td></tr>
-                    ) : (
-                        productos.map((p) => (
-                            <tr Key={p.id}>
-                                <td>{p.id}</td>
-                                <td>{p.nombre}</td>
-                                <td>{p.categoria}</td>
-                                <td>{p.cantidad}</td>
-                                <td>{p.precio}</td>
-                                <td>{p.ubicacion}</td>
-                                <td>{p.stockMinimo}</td>
-                                <td>
-                                    <button>Editar</button>
-                                    <button>Eliminar</button>
-                                </td>
-                            </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
-        </div>
-    );
+      <table border="1">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          {productos.map((p) => (
+            <tr key={p.id}>
+              <td>{p.id}</td>
+              <td>{p.nombre}</td>
+              <td>{p.categoria}</td>
+              <td>{p.precio}</td>
+              <td>{p.cantidad}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 export default Inventario;
