@@ -5,6 +5,7 @@ import ReactDOM from "react-dom/client";
 import {BrowserRouter} from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css"; // archivo de estilos por defecto de Vite
+import "./globals.css"; // estilos globales customizados
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 
