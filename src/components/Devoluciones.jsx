@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 
 function Devoluciones() {
 
-    const [devoluciones, setDevoluciones] = useState([]);
+    const [devoluciones] = useState([]);
 
     useEffect(() => {
 
@@ -28,14 +28,14 @@ function Devoluciones() {
                     </tr>
                 </thead>
                 <tbody>
-                    {devoluciones.legnth === 0 ? (
+                    {devoluciones.length === 0 ? (
 
                         <tr><td colSpan="5">No hay devoluciones registrada</td></tr>
                     ) : (
                         devoluciones.map((d, i) => (
 
                             <tr key={i}>
-                                <td>{d.i}</td>
+                                <td>{d.id}</td>
                                 <td>{d.motivo}</td>
                                 <td>{d.cantidad}</td>
                                 <td>{d.vendedor}</td>

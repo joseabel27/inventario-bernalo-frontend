@@ -39,7 +39,7 @@ async function post(path, data){
         const res = await fetch(`${API_URL}${path}`,{
 
             method:"POST",
-            headers: {" Content-Type": "application/json"},
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify(data)     
         });
 
@@ -84,7 +84,7 @@ async function remove(path){
 
     try{
 
-        const res = await fecth(`${API_URL}${path}`{method:"DELETE"});
+        const res = await fetch(`${API_URL}${path}`, { method:"DELETE" });
         if (!res.ok) throw new Error(`Error DELETE ${path}`);
         return await res.json();
     }catch (error){
@@ -162,9 +162,8 @@ export async function buscarPorNombre(nombre){
 
 
 export async function crearProducto(data){
-validarProducto(data);
-return await post("/inventario,data");
-
+    validarProducto(data);
+    return await post("/inventario", data);
 }
 
 

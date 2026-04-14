@@ -4,7 +4,7 @@ import React, {useState,useEffect} from "react";
 
 function Ventas(){
 
-    const [ventas, setVentas] = useState([]);
+    const [ventas] = useState([]);
 
     useEffect(()=>{
 
@@ -35,13 +35,13 @@ function Ventas(){
                     ):(
 
                         ventas.map((v)=>(
-                            <tr Key={v.idVenta}>
+                            <tr key={v.idVenta}>
                                 <td>{v.idVenta}</td>
                                 <td>{v.producto}</td>
                                 <td>{v.cantidad}</td>
                                 <td>{v.total}</td>
                                 <td>{v.vendedor}</td>
-                                <td>{new Date(v.fecha).toLocalString()}</td>
+                                <td>{new Date(v.fecha).toLocaleString()}</td>
                             </tr>
                         ))
                     )}
