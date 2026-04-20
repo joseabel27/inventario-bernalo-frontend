@@ -113,6 +113,7 @@ function Inventario() {
             <option value="Balanzas">Balanzas</option>
             <option value="Celdas">Celdas</option>
             <option value="Repuestos">Repuestos</option>
+            <option value="Horeka">Horeka</option>
           </select>
 
           <input name="precio" type="number" placeholder="Precio" onChange={handleChange} className={inputStyle} required />
