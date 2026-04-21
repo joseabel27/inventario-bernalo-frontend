@@ -14,6 +14,21 @@ function Inventario() {
     stockMinimo: ""
   });
 
+  const generarUbicaciones = () => {
+  const letras = "ABCDEFGHIJ".split("");
+  const ubicaciones = [];
+
+  letras.forEach((letra) => {
+    for (let i = 1; i <= 3; i++) {
+      ubicaciones.push(`Estante ${letra}${i}`);
+    }
+  });
+
+  return ubicaciones;
+};
+
+const ubicaciones = generarUbicaciones();
+
   // =========================
   // ESTILOS
   // =========================
@@ -89,6 +104,7 @@ function Inventario() {
       .then(data => setProductos(data))
       .catch(err => console.error(err));
   }, []);
+  
 
   return (
     <div className="space-y-8 p-6">
@@ -119,7 +135,15 @@ function Inventario() {
           <input name="precio" type="number" placeholder="Precio" onChange={handleChange} className={inputStyle} required />
           <input name="cantidad" type="number" placeholder="Cantidad" onChange={handleChange} className={inputStyle} required />
 
-          <input name="ubicacion" placeholder="Ubicación" onChange={handleChange} className={inputStyle} required />
+          <select name="ubicacion" onChange={handleChange} className={inputStyle} required>
+  <option value="">Selecciona ubicación</option>
+
+  {ubicaciones.map((ubi) => (
+    <option key={ubi} value={ubi}>
+      {ubi}
+    </option>
+  ))}
+</select>
           <input name="stockMinimo" type="number" placeholder="Stock mínimo" onChange={handleChange} className={inputStyle} required />
 
           <button className="md:col-span-2 bg-sky-500 hover:bg-sky-400 text-black font-bold py-3 rounded-2xl">
