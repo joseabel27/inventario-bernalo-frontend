@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
+
 
 const API = "http://localhost:3000";
 
 function Inventario() {
   const [productos, setProductos] = useState([]);
+  const fichaRef = useRef(null);
 
   const [form, setForm] = useState({
     nombre: "",
@@ -13,7 +16,11 @@ function Inventario() {
     ubicacion: "",
     stockMinimo: ""
   });
-
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  const [busqueda, setBusqueda] = useState("");
+  const productosFiltrados = productos.filter((p) =>
+  p.nombre.toLowerCase().includes(busqueda.toLowerCase())
+);
   const generarUbicaciones = () => {
   const letras = "ABCDEFGHIJ".split("");
   const ubicaciones = [];
@@ -101,7 +108,10 @@ const ubicaciones = generarUbicaciones();
   useEffect(() => {
     fetch(`${API}/api/inventario`)
       .then(res => res.json())
-      .then(data => setProductos(data))
+      .then((data) => {
+  console.log("DATA COMPLETA:", JSON.stringify(data, null, 2)); // 👈 EXACTAMENTE AQUÍ
+  setProductos(data);
+})
       .catch(err => console.error(err));
   }, []);
   
@@ -125,8 +135,10 @@ const ubicaciones = generarUbicaciones();
 
           <select name="categoria" onChange={handleChange} className={inputStyle} required>
             <option value="">Categoría</option>
-            <option value="Basculas">Basculas</option>
-            <option value="Balanzas">Balanzas</option>
+            <option value="Grameras">Grameras</option>
+            <option value="Basculas">Balanzas</option>
+            <option value="Balanzas">Basculas</option>
+            <option value="Dinamometros">Dinamómetros</option>
             <option value="Celdas">Celdas</option>
             <option value="Repuestos">Repuestos</option>
             <option value="Horeka">Horeka</option>
@@ -159,6 +171,69 @@ const ubicaciones = generarUbicaciones();
           <p className="text-slate-400">Total: {productos.length}</p>
         </div>
 
+<div className="mb-4">
+  <div className="relative">
+    <input
+      type="text"
+      placeholder="🔍 Buscar producto..."
+      value={busqueda}
+      onChange={(e) => setBusqueda(e.target.value)}
+      className="w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 placeholder-slate-500 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 outline-none"
+    />
+
+    {/* Icono */}
+    <span className="absolute right-4 top-3 text-slate-400">
+      🔎
+    </span>
+  </div>
+</div>
+{/* ******************SELECCION DE PRODUCTO PARA MOSTRAR FICHA*************************************** */}
+{productoSeleccionado && (
+  <div ref={fichaRef}className="bg-slate-900 p-6 rounded-3xl border border-slate-700 shadow-xl mb-6">
+
+    <div className="flex justify-between items-center mb-4">
+      <h3 className="text-2xl text-white font-bold">
+        📦 {productoSeleccionado.nombre}
+      </h3>
+
+      <button
+        onClick={() => setProductoSeleccionado(null)}
+        className="text-red-400 hover:text-red-300"
+      >
+        ✖
+      </button>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      {/* IMAGEN */}
+      <div className="flex justify-center">
+        <img
+  src={productoSeleccionado.imagen || "https://via.placeholder.com/250"}
+  alt={productoSeleccionado.nombre}
+  className="w-full max-w-xs md:max-w-sm h-auto object-contain rounded-2xl border border-slate-700"
+/>
+      </div>
+
+      {/* INFO */}
+      <div className="space-y-2 text-slate-300">
+        <p><strong>ID:</strong> {productoSeleccionado.id}</p>
+        <p><strong>Categoría:</strong> {productoSeleccionado.categoria}</p>
+        <p><strong>Precio:</strong><p>
+  {productoSeleccionado.precio.toLocaleString("es-CO", {
+    style: "currency",
+    currency: "COP"
+  })}
+</p></p>
+        <p><strong>Cantidad:</strong> {productoSeleccionado.cantidad}</p>
+        <p><strong>Ubicación:</strong> {productoSeleccionado.ubicacion}</p>
+        <p><strong>Stock mínimo:</strong> {productoSeleccionado.stockMinimo}</p>
+      </div>
+
+    </div>
+  </div>
+)}
+{/* ***************************************************************************************/}
         <table className="w-full">
           <thead className="bg-slate-900 text-slate-300">
             <tr>
@@ -173,25 +248,40 @@ const ubicaciones = generarUbicaciones();
             </tr>
           </thead>
 
-          <tbody>
-            {productos.length === 0 ? (
-              <tr>
-                <td colSpan="8" className="text-center p-6 text-slate-500">
-                  No hay productos
-                </td>
-              </tr>
-            ) : (
-              productos.map((p) => (
-                <tr
-                  key={p.id}
-                  className={`border-t border-slate-800 hover:bg-slate-900 ${
-                    p.cantidad <= p.stockMinimo ? "bg-red-900/40" : ""
-                  }`}
-                >
+        
+           <tbody>
+  {productosFiltrados.length === 0 ? (
+    <tr>
+      <td colSpan="8" className="text-center p-6 text-slate-500">
+        🔍 No se encontraron productos
+      </td>
+    </tr>
+  ) : (
+    productosFiltrados.map((p) => (
+               <tr
+  key={p.id}
+ onClick={() => {
+  setProductoSeleccionado(p);
+  setTimeout(() => {
+    fichaRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }, 100);
+}}
+  className={`cursor-pointer border-t border-slate-800 hover:bg-slate-900 ${
+    p.cantidad <= p.stockMinimo ? "bg-red-900/40" : ""
+  }`}
+>
                   <td className="p-3">#{p.id}</td>
                   <td className="p-3 text-white font-semibold">{p.nombre}</td>
                   <td className="p-3">{p.categoria}</td>
-                  <td className="p-3 text-right">${p.precio}</td>
+                  <td className="p-3 text-right">
+  {p.precio.toLocaleString("es-CO", {
+    style: "currency",
+    currency: "COP"
+  })}
+</td>
 
                   {/* CANTIDAD CON ALERTA */}
                   <td className="p-3 text-center">
