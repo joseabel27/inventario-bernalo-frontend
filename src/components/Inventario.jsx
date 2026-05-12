@@ -6,6 +6,8 @@ const API = "http://localhost:3000";
 
 function Inventario() {
   const [productos, setProductos] = useState([]);
+  const [modoEdicion, setModoEdicion] = useState(false);
+const [productoEditando, setProductoEditando] = useState(null);
   const fichaRef = useRef(null);
 
   const [form, setForm] = useState({
@@ -51,6 +53,29 @@ const ubicaciones = generarUbicaciones();
       [e.target.name]: e.target.value
     });
   };
+
+  /* GUARDAR EDICIONES */
+  const guardarEdicion = () => {
+  fetch(`http://localhost:3000/api/inventario/${productoEditando.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(productoEditando)
+  })
+    .then((res) => res.json())
+    .then(() => {
+      alert("Producto actualizado ✅");
+
+      setModoEdicion(false);
+      setProductoSeleccionado(null);
+
+      return fetch("http://localhost:3000/api/inventario");
+    })
+    .then((res) => res.json())
+    .then((data) => setProductos(data))
+    .catch((err) => console.error(err));
+};
 
   // =========================
   // AGREGAR PRODUCTO
@@ -225,11 +250,126 @@ const ubicaciones = generarUbicaciones();
     currency: "COP"
   })}
 </p></p>
+
         <p><strong>Cantidad:</strong> {productoSeleccionado.cantidad}</p>
         <p><strong>Ubicación:</strong> {productoSeleccionado.ubicacion}</p>
         <p><strong>Stock mínimo:</strong> {productoSeleccionado.stockMinimo}</p>
+            <button
+  onClick={() => {
+    setModoEdicion(true);
+    setProductoEditando(productoSeleccionado);
+  }}
+  className="bg-yellow-500 hover:bg-yellow-400 px-4 py-2 rounded-xl text-black font-bold mt-4"
+>
+  ✏️ Editar
+</button>
       </div>
+  
 
+    </div>
+    
+  </div>
+)}
+
+{/* FORMULARIO EDITAR PRODUCTO */}
+
+{modoEdicion && productoEditando && (
+  <div className="bg-slate-950 rounded-3xl p-6 mt-6 border border-slate-800">
+    <h3 className="text-2xl text-white font-bold mb-4">✏️ Editar Producto</h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      {/* NOMBRE */}
+      <input
+        value={productoEditando.nombre}
+        onChange={(e) =>
+          setProductoEditando({ ...productoEditando, nombre: e.target.value })
+        }
+        className={inputStyle}
+      />
+
+      {/* CATEGORIA */}
+      <select
+        value={productoEditando.categoria}
+        onChange={(e) =>
+          setProductoEditando({ ...productoEditando, categoria: e.target.value })
+        }
+        className={inputStyle}
+      >
+        <option value="Basculas">Basculas</option>
+        <option value="Balanzas">Balanzas</option>
+        <option value="Celdas">Celdas</option>
+        <option value="Repuestos">Repuestos</option>
+        <option value="Horeca">Horeca</option>
+      </select>
+
+      {/* PRECIO */}
+      <input
+        type="number"
+        value={productoEditando.precio}
+        onChange={(e) =>
+          setProductoEditando({
+            ...productoEditando,
+            precio: Number(e.target.value)
+          })
+        }
+        className={inputStyle}
+      />
+
+      {/* CANTIDAD */}
+      <input
+        type="number"
+        value={productoEditando.cantidad}
+        onChange={(e) =>
+          setProductoEditando({
+            ...productoEditando,
+            cantidad: Number(e.target.value)
+          })
+        }
+        className={inputStyle}
+      />
+
+      {/* UBICACION */}
+      <input
+        value={productoEditando.ubicacion}
+        onChange={(e) =>
+          setProductoEditando({
+            ...productoEditando,
+            ubicacion: e.target.value
+          })
+        }
+        className={inputStyle}
+      />
+
+      {/* STOCK MINIMO */}
+      <input
+        type="number"
+        value={productoEditando.stockMinimo}
+        onChange={(e) =>
+          setProductoEditando({
+            ...productoEditando,
+            stockMinimo: Number(e.target.value)
+          })
+        }
+        className={inputStyle}
+      />
+    </div>
+
+    {/* BOTONES */}
+    <div className="mt-6 flex gap-3">
+      <button
+        onClick={guardarEdicion}
+        className="bg-green-500 hover:bg-green-400 px-6 py-3 rounded-2xl font-bold text-black"
+      >
+        💾 Guardar
+      </button>
+
+      <button
+        onClick={() => setModoEdicion(false)}
+        className="bg-slate-700 hover:bg-slate-600 px-6 py-3 rounded-2xl text-white"
+      >
+        Cancelar
+      </button>
     </div>
   </div>
 )}
