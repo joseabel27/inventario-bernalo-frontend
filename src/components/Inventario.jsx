@@ -75,7 +75,7 @@ const ubicaciones = generarUbicaciones();
     .then((res) => res.json())
     .then((data) => setProductos(data))
     .catch((err) => console.error(err));
-};
+} 
 
   // =========================
   // AGREGAR PRODUCTO

@@ -4,14 +4,16 @@ import React, {useState,useEffect} from "react";
 
 function Ventas(){
 
-   const [ventas, setVentas] = useState([]);
+const [ventas, setVentas] = useState([]);
 
 const [productos, setProductos] = useState([]);
 
 const [venta, setVenta] = useState({
   vendedor: "",
   ciudad: "",
-  cliente: ""
+  cliente: "",
+  tipoDocumento: "FVP",
+  factura: ""
 });
 
 const [busqueda, setBusqueda] = useState("");
@@ -183,6 +185,34 @@ const total =
           onChange={handleChange}
           className="w-full md:w-auto bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
         />
+
+        {/* FACTURA */}
+
+        {/* TIPO DOCUMENTO */}
+<select
+  name="tipoDocumento"
+  value={venta.tipoDocumento}
+  onChange={handleChange}
+  className="bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
+>
+
+  <option value="FVP">
+    Factura Venta (FVP)
+  </option>
+
+  <option value="DESP">
+    Remisión Despacho (DESP)
+  </option>
+
+</select>
+<input
+  name="factura"
+  placeholder="Número de factura ó Remision"
+  
+  value={venta.factura}
+  onChange={handleChange}
+  className="bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
+/>
         </div>
 
         {/* PRODUCTO */}
