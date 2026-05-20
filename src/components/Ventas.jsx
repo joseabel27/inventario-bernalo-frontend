@@ -4,7 +4,7 @@ import React, {useState,useEffect} from "react";
 
 function Ventas(){
 
-const [ventas, setVentas] = useState([]);
+/* const [ventas, setVentas] = useState([]); */
 
 const [productos, setProductos] = useState([]);
 
@@ -100,39 +100,93 @@ const iva = totalGeneral * 0.19;
 
 const totalConIVA = totalGeneral + iva;
 
-const productoSeleccionado = productos.find(
-  (p) => p.id === Number(venta.productoId)
-);
 
-const total =
-  productoSeleccionado
-    ? productoSeleccionado.precio * venta.cantidad
-    : 0;
+  const registrarVenta = async () => {
 
-    const registrarVenta = () => {
+  // VALIDAR CARRITO
+  if (carrito.length === 0) {
 
-  fetch("http://localhost:3000/api/ventas", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      ...venta,
-      productoId: Number(venta.productoId),
-      cantidad: Number(venta.cantidad),
-      total
-    })
-  })
-    .then((res) => res.json())
-    .then((data) => {
+    alert("Agrega productos al carrito");
+
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      "http://localhost:3000/api/ventas",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+          vendedor: venta.vendedor,
+          ciudad: venta.ciudad,
+          cliente: venta.cliente,
+          tipoDocumento: venta.tipoDocumento,
+          factura: venta.factura,
+
+          carrito,
+
+          subtotal: totalGeneral,
+          iva,
+          total: totalConIVA
+
+        })
+
+      }
+    );
+
+    const data = await response.json();
+
+    // ERROR
+    if (!response.ok) {
 
       alert(data.mensaje);
 
-      return fetch("http://localhost:3000/api/inventario");
-    })
-    .then((res) => res.json())
-    .then((data) => setProductos(data))
-    .catch((err) => console.error(err));
+      return;
+    }
+
+    // OK
+    alert("Venta registrada correctamente ✅");
+
+    // =========================
+    // RECARGAR INVENTARIO
+    // =========================
+    const inventarioActualizado = await fetch(
+      "http://localhost:3000/api/inventario"
+    );
+
+    const productosActualizados =
+      await inventarioActualizado.json();
+
+    setProductos(productosActualizados);
+
+    // =========================
+    // LIMPIAR FORMULARIO
+    // =========================
+    setCarrito([]);
+
+    setBusqueda("");
+
+    setVenta({
+      vendedor: "",
+      ciudad: "",
+      cliente: "",
+      tipoDocumento: "FVP",
+      factura: ""
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Error al registrar venta");
+
+  }
 
 };
 
