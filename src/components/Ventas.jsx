@@ -261,7 +261,7 @@ const totalConIVA = totalGeneral + iva;
 </select>
 <input
   name="factura"
-  placeholder="Número de factura ó Remision"
+  placeholder="Número CM"
   
   value={venta.factura}
   onChange={handleChange}
