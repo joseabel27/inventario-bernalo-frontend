@@ -6,6 +6,7 @@ function Ventas(){
 
 const [ventas, setVentas] = useState([]);
 
+
 /* const [ventas, setVentas] = useState([]); */
 
 const [productos, setProductos] = useState([]);
@@ -23,6 +24,7 @@ const [busqueda, setBusqueda] = useState("");
 const [cantidad, setCantidad] = useState(1);
 
 const [carrito, setCarrito] = useState([]);
+const [buscarVenta, setBuscarVenta] = useState("");
 
 const cargarVentas = () => {
 
@@ -32,6 +34,24 @@ const cargarVentas = () => {
     .catch((err) => console.error(err));
 
 };
+
+const ventasFiltradas = ventas.filter((v) => {
+
+  const texto = buscarVenta.toLowerCase();
+
+  return (
+
+    v.factura?.toLowerCase().includes(texto) ||
+
+    v.cliente?.toLowerCase().includes(texto) ||
+
+    v.vendedor?.toLowerCase().includes(texto) ||
+
+    v.ciudad?.toLowerCase().includes(texto)
+
+  );
+
+});
 
   useEffect(() => {
 
@@ -45,6 +65,8 @@ const cargarVentas = () => {
       //Cargar ventas
 
        cargarVentas();
+
+       
 
 }, []);
 
@@ -517,6 +539,14 @@ const totalConIVA = totalGeneral + iva;
       📊 Historial de Ventas
     </h3>
 
+    <input
+  type="text"
+  placeholder="🔎 Buscar factura, cliente, vendedor o ciudad..."
+  value={buscarVenta}
+  onChange={(e) => setBuscarVenta(e.target.value)}
+  className="mt-4 w-full md:w-1/2 bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
+/>
+
   </div>
 
   <table className="w-full">
@@ -549,7 +579,7 @@ const totalConIVA = totalGeneral + iva;
 
       ) : (
 
-        ventas.map((v) => (
+       ventasFiltradas.map((v) => (
 
           <tr
             key={v.idVenta}
