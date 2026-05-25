@@ -4,6 +4,8 @@ import React, {useState,useEffect} from "react";
 
 function Ventas(){
 
+const [ventas, setVentas] = useState([]);
+
 /* const [ventas, setVentas] = useState([]); */
 
 const [productos, setProductos] = useState([]);
@@ -22,13 +24,27 @@ const [cantidad, setCantidad] = useState(1);
 
 const [carrito, setCarrito] = useState([]);
 
+const cargarVentas = () => {
+
+  fetch("http://localhost:3000/api/ventas")
+    .then((res) => res.json())
+    .then((data) => setVentas(data))
+    .catch((err) => console.error(err));
+
+};
+
   useEffect(() => {
 
+    
     // Cargar productos desde backend
     fetch("http://localhost:3000/api/inventario")
       .then((res) => res.json())
       .then((data) => setProductos(data))
       .catch((err) => console.error(err));
+
+      //Cargar ventas
+
+       cargarVentas();
 
 }, []);
 
@@ -164,6 +180,7 @@ const totalConIVA = totalGeneral + iva;
       await inventarioActualizado.json();
 
     setProductos(productosActualizados);
+    cargarVentas();
 
     // =========================
     // LIMPIAR FORMULARIO
@@ -491,7 +508,96 @@ const totalConIVA = totalGeneral + iva;
       </button>
 
     </div>
+{/* HISTORIAL DE VENTAS */}
+<div className="bg-slate-950 rounded-3xl border border-slate-800 overflow-hidden mt-8">
 
+  <div className="p-4 border-b border-slate-800">
+
+    <h3 className="text-2xl font-bold text-white">
+      📊 Historial de Ventas
+    </h3>
+
+  </div>
+
+  <table className="w-full">
+
+    <thead className="bg-slate-900 text-slate-300">
+
+      <tr>
+        <th className="p-3 text-left">Factura</th>
+        <th className="p-3 text-left">Cliente</th>
+        <th className="p-3 text-left">Ciudad</th>
+        <th className="p-3 text-left">Vendedor</th>
+        <th className="p-3 text-right">Total</th>
+        <th className="p-3 text-center">Fecha</th>
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      {ventas.length === 0 ? (
+
+        <tr>
+          <td
+            colSpan="6"
+            className="text-center p-6 text-slate-500"
+          >
+            No hay ventas registradas
+          </td>
+        </tr>
+
+      ) : (
+
+        ventas.map((v) => (
+
+          <tr
+            key={v.idVenta}
+            className="border-t border-slate-800"
+          >
+
+            <td className="p-3 text-white font-semibold">
+              {v.tipoDocumento}-{v.factura}
+            </td>
+
+            <td className="p-3 text-white">
+              {v.cliente}
+            </td>
+
+            <td className="p-3 text-white">
+              {v.ciudad}
+            </td>
+
+            <td className="p-3 text-white">
+              {v.vendedor}
+            </td>
+
+            <td className="p-3 text-right text-emerald-400 font-bold">
+
+              {v.total.toLocaleString("es-CO", {
+                style: "currency",
+                currency: "COP"
+              })}
+
+            </td>
+
+            <td className="p-3 text-center text-slate-300">
+
+              {new Date(v.fecha).toLocaleDateString("es-CO")}
+
+            </td>
+
+          </tr>
+
+        ))
+
+      )}
+
+    </tbody>
+
+  </table>
+
+</div>
   </div>
 );
 }

@@ -280,79 +280,97 @@ const ubicaciones = generarUbicaciones();
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
       {/* NOMBRE */}
-      <input
-        value={productoEditando.nombre}
-        onChange={(e) =>
-          setProductoEditando({ ...productoEditando, nombre: e.target.value })
-        }
-        className={inputStyle}
-      />
+      <label className="space-y-2">
+        <span className="text-sm text-slate-400">Nombre del producto</span>
+        <input
+          value={productoEditando.nombre}
+          onChange={(e) =>
+            setProductoEditando({ ...productoEditando, nombre: e.target.value })
+          }
+          className={inputStyle}
+        />
+      </label>
 
       {/* CATEGORIA */}
-      <select
-        value={productoEditando.categoria}
-        onChange={(e) =>
-          setProductoEditando({ ...productoEditando, categoria: e.target.value })
-        }
-        className={inputStyle}
-      >
-        <option value="Basculas">Basculas</option>
-        <option value="Balanzas">Balanzas</option>
-        <option value="Celdas">Celdas</option>
-        <option value="Repuestos">Repuestos</option>
-        <option value="Horeca">Horeca</option>
-      </select>
+      <label className="space-y-2">
+        <span className="text-sm text-slate-400">Categoría</span>
+        <select
+          value={productoEditando.categoria}
+          onChange={(e) =>
+            setProductoEditando({ ...productoEditando, categoria: e.target.value })
+          }
+          className={inputStyle}
+        >
+          <option value="Basculas">Basculas</option>
+          <option value="Balanzas">Balanzas</option>
+          <option value="Celdas">Celdas</option>
+          <option value="Repuestos">Repuestos</option>
+          <option value="Horeca">Horeca</option>
+        </select>
+      </label>
 
       {/* PRECIO */}
-      <input
-        type="number"
-        value={productoEditando.precio}
-        onChange={(e) =>
-          setProductoEditando({
-            ...productoEditando,
-            precio: Number(e.target.value)
-          })
-        }
-        className={inputStyle}
-      />
+      <label className="space-y-2">
+        <span className="text-sm text-slate-400">Precio</span>
+        <input
+          type="number"
+          value={productoEditando.precio}
+          onChange={(e) =>
+            setProductoEditando({
+              ...productoEditando,
+              precio: Number(e.target.value)
+            })
+          }
+          className={inputStyle}
+        />
+      </label>
 
       {/* CANTIDAD */}
-      <input
-        type="number"
-        value={productoEditando.cantidad}
-        onChange={(e) =>
-          setProductoEditando({
-            ...productoEditando,
-            cantidad: Number(e.target.value)
-          })
-        }
-        className={inputStyle}
-      />
+      <label className="space-y-2">
+        <span className="text-sm text-slate-400">Cantidad</span>
+        <input
+          type="number"
+          value={productoEditando.cantidad}
+          onChange={(e) =>
+            setProductoEditando({
+              ...productoEditando,
+              cantidad: Number(e.target.value)
+            })
+          }
+          className={inputStyle}
+        />
+      </label>
 
       {/* UBICACION */}
-      <input
-        value={productoEditando.ubicacion}
-        onChange={(e) =>
-          setProductoEditando({
-            ...productoEditando,
-            ubicacion: e.target.value
-          })
-        }
-        className={inputStyle}
-      />
+      <label className="space-y-2">
+        <span className="text-sm text-slate-400">Ubicación</span>
+        <input
+          value={productoEditando.ubicacion}
+          onChange={(e) =>
+            setProductoEditando({
+              ...productoEditando,
+              ubicacion: e.target.value
+            })
+          }
+          className={inputStyle}
+        />
+      </label>
 
       {/* STOCK MINIMO */}
-      <input
-        type="number"
-        value={productoEditando.stockMinimo}
-        onChange={(e) =>
-          setProductoEditando({
-            ...productoEditando,
-            stockMinimo: Number(e.target.value)
-          })
-        }
-        className={inputStyle}
-      />
+      <label className="space-y-2">
+        <span className="text-sm text-slate-400">Stock mínimo</span>
+        <input
+          type="number"
+          value={productoEditando.stockMinimo}
+          onChange={(e) =>
+            setProductoEditando({
+              ...productoEditando,
+              stockMinimo: Number(e.target.value)
+            })
+          }
+          className={inputStyle}
+        />
+      </label>
     </div>
 
     {/* BOTONES */}
