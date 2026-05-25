@@ -139,6 +139,50 @@ const iva = totalGeneral * 0.19;
 const totalConIVA = totalGeneral + iva;
 
 
+const despacharVenta = async (idVenta) => {
+
+  const guia = prompt("Ingrese número de guía");
+
+  if (!guia) return;
+
+  try {
+
+    const response = await fetch(
+
+      `http://localhost:3000/api/ventas/${idVenta}/despachar`,
+
+      {
+        method: "PUT",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          numeroGuia: guia
+        })
+
+      }
+
+    );
+
+    const data = await response.json();
+
+    alert(data.mensaje);
+
+    cargarVentas();
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Error al despachar");
+
+  }
+
+};
+
+
   const registrarVenta = async () => {
 
   // VALIDAR CARRITO
@@ -166,7 +210,8 @@ const totalConIVA = totalGeneral + iva;
           cliente: venta.cliente,
           tipoDocumento: venta.tipoDocumento,
           factura: venta.factura,
-
+          estado: "Armando Pedido",
+          numeroGuia: "",
           carrito,
 
           subtotal: totalGeneral,
@@ -558,8 +603,11 @@ const totalConIVA = totalGeneral + iva;
         <th className="p-3 text-left">Cliente</th>
         <th className="p-3 text-left">Ciudad</th>
         <th className="p-3 text-left">Vendedor</th>
+        <th className="p-3 text-center">Estado</th>
+        <th className="p-3 text-center">Guía</th>
         <th className="p-3 text-right">Total</th>
         <th className="p-3 text-center">Fecha</th>
+        <th className="p-3 text-center">Acciones</th>
       </tr>
 
     </thead>
@@ -602,6 +650,26 @@ const totalConIVA = totalGeneral + iva;
               {v.vendedor}
             </td>
 
+            <td className="p-3 text-center">
+
+  <span
+    className={`px-3 py-1 rounded-xl text-sm font-bold ${
+      v.estado === "Despachado"
+        ? "bg-emerald-500 text-black"
+        : "bg-yellow-500 text-black"
+    }`}
+  >
+    {v.estado}
+  </span>
+
+</td>
+
+<td className="p-3 text-center text-white">
+
+  {v.numeroGuia || "-"}
+
+</td>
+
             <td className="p-3 text-right text-emerald-400 font-bold">
 
               {v.total.toLocaleString("es-CO", {
@@ -616,6 +684,27 @@ const totalConIVA = totalGeneral + iva;
               {new Date(v.fecha).toLocaleDateString("es-CO")}
 
             </td>
+
+            <td className="p-3 text-center">
+
+  {v.estado !== "Despachado" ? (
+
+    <button
+      onClick={() => despacharVenta(v.idVenta)}
+      className="bg-sky-500 hover:bg-sky-400 text-black px-4 py-2 rounded-xl font-bold"
+    >
+      🚚 Despachar
+    </button>
+
+  ) : (
+
+    <span className="text-emerald-400 font-bold">
+      ✅ Enviado
+    </span>
+
+  )}
+
+</td>
 
           </tr>
 
