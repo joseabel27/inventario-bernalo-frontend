@@ -2,9 +2,9 @@
 // CONFIGURACION BASE DEL BACKEND
 //========================================================
 
-// Cambiar la URL si tu Backend usa otro puerto.
-
-const API_URL = "http://localhost:5173";
+// Cambiar la URL si tu backend usa otro puerto.
+// Vite expone variables de entorno prefijadas con VITE_.
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 //====================================================
 // FUNCIONES AUXILIARES  DE SOLICITUD DE HTTP (FETCH)

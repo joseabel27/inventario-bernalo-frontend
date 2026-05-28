@@ -25,6 +25,13 @@ const [cantidad, setCantidad] = useState(1);
 
 const [carrito, setCarrito] = useState([]);
 const [buscarVenta, setBuscarVenta] = useState("");
+const [ventaDespacho, setVentaDespacho] = useState(null);
+
+const [transportadora, setTransportadora] =
+  useState("");
+
+const [numeroGuia, setNumeroGuia] =
+  useState("");
 
 const cargarVentas = () => {
 
@@ -141,9 +148,12 @@ const totalConIVA = totalGeneral + iva;
 
 const despacharVenta = async (idVenta) => {
 
-  const guia = prompt("Ingrese número de guía");
+  if (!transportadora || !numeroGuia) {
 
-  if (!guia) return;
+    alert("Completa transportadora y guía");
+
+    return;
+  }
 
   try {
 
@@ -159,7 +169,10 @@ const despacharVenta = async (idVenta) => {
         },
 
         body: JSON.stringify({
-          numeroGuia: guia
+
+          numeroGuia,
+          transportadora
+
         })
 
       }
@@ -172,6 +185,12 @@ const despacharVenta = async (idVenta) => {
 
     cargarVentas();
 
+    setVentaDespacho(null);
+
+    setTransportadora("");
+
+    setNumeroGuia("");
+
   } catch (error) {
 
     console.error(error);
@@ -181,8 +200,6 @@ const despacharVenta = async (idVenta) => {
   }
 
 };
-
-
   const registrarVenta = async () => {
 
   // VALIDAR CARRITO
@@ -605,6 +622,9 @@ const despacharVenta = async (idVenta) => {
         <th className="p-3 text-left">Vendedor</th>
         <th className="p-3 text-center">Estado</th>
         <th className="p-3 text-center">Guía</th>
+        <th className="p-3 text-center">
+  Transportadora
+</th>
         <th className="p-3 text-right">Total</th>
         <th className="p-3 text-center">Fecha</th>
         <th className="p-3 text-center">Acciones</th>
@@ -670,6 +690,12 @@ const despacharVenta = async (idVenta) => {
 
 </td>
 
+<td className="p-3 text-center text-white">
+
+  {v.transportadora || "-"}
+
+</td>
+
             <td className="p-3 text-right text-emerald-400 font-bold">
 
               {v.total.toLocaleString("es-CO", {
@@ -687,22 +713,72 @@ const despacharVenta = async (idVenta) => {
 
             <td className="p-3 text-center">
 
-  {v.estado !== "Despachado" ? (
+{v.estado !== "Despachado" ? (
+
+  ventaDespacho === v.idVenta ? (
+
+    <div className="flex flex-col gap-2">
+
+      <select
+        value={transportadora}
+        onChange={(e) =>
+          setTransportadora(e.target.value)
+        }
+        className="bg-slate-900 border border-slate-700 rounded-xl p-2 text-white"
+      >
+
+        <option value="">
+          Seleccionar
+        </option>
+
+        <option>Interrapidisimo</option>
+        <option>Servi Entrega</option>
+        <option>Envia</option>
+        <option>TCC</option>
+        <option>Estelar Expres</option>
+        <option>Z-Expres</option>
+        <option>Los Cachacos</option>
+        <option>Transportes Nariño</option>
+
+      </select>
+
+      <input
+        type="text"
+        placeholder="Número guía"
+        value={numeroGuia}
+        onChange={(e) =>
+          setNumeroGuia(e.target.value)
+        }
+        className="bg-slate-900 border border-slate-700 rounded-xl p-2 text-white"
+      />
+
+      <button
+        onClick={() => despacharVenta(v.idVenta)}
+        className="bg-emerald-500 hover:bg-emerald-400 text-black px-3 py-2 rounded-xl font-bold"
+      >
+        Guardar
+      </button>
+
+    </div>
+
+  ) : (
 
     <button
-      onClick={() => despacharVenta(v.idVenta)}
+      onClick={() => setVentaDespacho(v.idVenta)}
       className="bg-sky-500 hover:bg-sky-400 text-black px-4 py-2 rounded-xl font-bold"
     >
       🚚 Despachar
     </button>
 
-  ) : (
+  )
 
-    <span className="text-emerald-400 font-bold">
-      ✅ Enviado
-    </span>
+) : (
 
-  )}
+  <span className="text-emerald-400 font-bold">
+    ✅ Enviado
+  </span>
+
+)}
 
 </td>
 
