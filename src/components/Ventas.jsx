@@ -24,6 +24,11 @@ const [busqueda, setBusqueda] = useState("");
 const [cantidad, setCantidad] = useState(1);
 
 const [carrito, setCarrito] = useState([]);
+const [servicioManual, setServicioManual] = useState({
+  descripcion: "",
+  precio: "",
+  cantidad: 1
+});
 const [buscarVenta, setBuscarVenta] = useState("");
 const [ventaDespacho, setVentaDespacho] = useState(null);
 
@@ -88,6 +93,15 @@ const productosFiltrados = productos.filter((p) =>
   p.nombre.toLowerCase().includes(busqueda.toLowerCase())
 );
 
+const handleServicioChange = (e) => {
+
+  setServicioManual({
+    ...servicioManual,
+    [e.target.name]: e.target.value
+  });
+
+};
+
 const agregarAlCarrito = (producto) => {
 
   const existente = carrito.find(
@@ -126,6 +140,50 @@ const agregarAlCarrito = (producto) => {
   setBusqueda("");
   setCantidad(1);
 };
+
+const agregarServicio = () => {
+
+  if (
+    !servicioManual.descripcion ||
+    !servicioManual.precio
+  ) {
+
+    alert("Completa descripción y precio");
+
+    return;
+  }
+
+  const nuevoServicio = {
+
+    id: Date.now(),
+
+    tipo: "servicio",
+
+    nombre: servicioManual.descripcion,
+
+    precio: Number(servicioManual.precio),
+
+    cantidad: Number(servicioManual.cantidad),
+
+    subtotal:
+      Number(servicioManual.precio) *
+      Number(servicioManual.cantidad)
+
+  };
+
+  setCarrito([
+    ...carrito,
+    nuevoServicio
+  ]);
+
+  setServicioManual({
+    descripcion: "",
+    precio: "",
+    cantidad: 1
+  });
+
+};
+
 
 const eliminarDelCarrito = (id) => {
 
@@ -434,6 +492,54 @@ const despacharVenta = async (idVenta) => {
 </div>
 
 {/* CARRITO */}
+
+{/* SERVICIOS MANUALES */}
+<div className="bg-slate-900 rounded-2xl p-4 border border-slate-800 mt-6">
+
+  <h3 className="text-white font-bold mb-4">
+    🛠️ Agregar Servicio
+  </h3>
+
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+
+    <input
+      type="text"
+      name="descripcion"
+      placeholder="Descripción"
+      value={servicioManual.descripcion}
+      onChange={handleServicioChange}
+      className="bg-slate-800 border border-slate-700 rounded-2xl p-3 text-white"
+    />
+
+    <input
+      type="number"
+      name="precio"
+      placeholder="Precio"
+      value={servicioManual.precio}
+      onChange={handleServicioChange}
+      className="bg-slate-800 border border-slate-700 rounded-2xl p-3 text-white"
+    />
+
+    <input
+      type="number"
+      name="cantidad"
+      min="1"
+      value={servicioManual.cantidad}
+      onChange={handleServicioChange}
+      className="bg-slate-800 border border-slate-700 rounded-2xl p-3 text-white"
+    />
+
+    <button
+      onClick={agregarServicio}
+      className="bg-orange-500 hover:bg-orange-400 text-black font-bold rounded-2xl"
+    >
+      ➕ Agregar Servicio
+    </button>
+
+  </div>
+
+</div>
+
 <div className="bg-slate-950 rounded-3xl border border-slate-800 overflow-hidden mt-6">
 
   <div className="p-4 border-b border-slate-800">
