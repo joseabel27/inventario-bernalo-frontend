@@ -845,6 +845,9 @@ const despacharVenta = async (idVenta) => {
         <option>Z-Expres</option>
         <option>Los Cachacos</option>
         <option>Transportes Nariño</option>
+        <option>Jhonatan</option>
+        <option>Don Oscar</option>
+        
 
       </select>
 
