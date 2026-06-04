@@ -32,6 +32,16 @@ const [servicioManual, setServicioManual] = useState({
 const [buscarVenta, setBuscarVenta] = useState("");
 const [ventaDespacho, setVentaDespacho] = useState(null);
 
+const [ventaEditando, setVentaEditando] = useState(null);
+
+const [formEditar, setFormEditar] = useState({
+  vendedor: "",
+  ciudad: "",
+  cliente: "",
+  tipoDocumento: "",
+  factura: ""
+});
+
 const [transportadora, setTransportadora] =
   useState("");
 
@@ -44,6 +54,86 @@ const cargarVentas = () => {
     .then((res) => res.json())
     .then((data) => setVentas(data))
     .catch((err) => console.error(err));
+
+};
+
+const editarVenta = (venta) => {
+
+  setVentaEditando(venta);
+
+  setFormEditar({
+    vendedor: venta.vendedor,
+    ciudad: venta.ciudad,
+    cliente: venta.cliente,
+    tipoDocumento: venta.tipoDocumento,
+    factura: venta.factura
+  });
+
+};
+
+const guardarEdicion = async () => {
+
+  try {
+
+    const response = await fetch(
+      `http://localhost:3000/api/ventas/${ventaEditando.idVenta}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formEditar)
+      }
+    );
+
+    const data = await response.json();
+
+    alert(data.mensaje);
+
+    setVentaEditando(null);
+
+    cargarVentas();
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Error al actualizar");
+
+  }
+
+};
+
+const eliminarFactura = async (idVenta) => {
+
+  const confirmar = window.confirm(
+    "¿Eliminar esta factura?"
+  );
+
+  if (!confirmar) return;
+
+  try {
+
+    const response = await fetch(
+      `http://localhost:3000/api/ventas/${idVenta}`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    const data = await response.json();
+
+    alert(data.mensaje);
+
+    cargarVentas();
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert("Error al eliminar");
+
+  }
 
 };
 
@@ -888,6 +978,24 @@ const despacharVenta = async (idVenta) => {
   </span>
 
 )}
+
+<div className="mt-2 flex gap-2 justify-center">
+
+  <button
+    onClick={() => editarVenta(v)}
+    className="bg-yellow-500 hover:bg-yellow-400 text-black px-3 py-1 rounded-xl font-bold"
+  >
+    ✏️ Editar
+  </button>
+
+  <button
+    onClick={() => eliminarFactura(v.idVenta)}
+    className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-xl font-bold"
+  >
+    🗑️
+  </button>
+
+</div>
 
 </td>
 
