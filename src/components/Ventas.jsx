@@ -42,6 +42,16 @@ const [formEditar, setFormEditar] = useState({
   factura: ""
 });
 
+
+const handleEditarChange = (e) => {
+
+  setFormEditar({
+    ...formEditar,
+    [e.target.name]: e.target.value
+  });
+
+};
+
 const [transportadora, setTransportadora] =
   useState("");
 
@@ -788,6 +798,87 @@ const despacharVenta = async (idVenta) => {
       </button>
 
     </div>
+
+    {ventaEditando && (
+
+  <div className="bg-slate-950 rounded-3xl border border-yellow-600 p-6 mb-8">
+
+    <h3 className="text-2xl font-bold text-yellow-400 mb-6">
+      ✏️ Editar Factura
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <input
+        name="cliente"
+        value={formEditar.cliente}
+        onChange={handleEditarChange}
+        placeholder="Cliente"
+        className="bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
+      />
+
+      <input
+        name="vendedor"
+        value={formEditar.vendedor}
+        onChange={handleEditarChange}
+        placeholder="Vendedor"
+        className="bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
+      />
+
+      <input
+        name="ciudad"
+        value={formEditar.ciudad}
+        onChange={handleEditarChange}
+        placeholder="Ciudad"
+        className="bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
+      />
+
+      <select
+        name="tipoDocumento"
+        value={formEditar.tipoDocumento}
+        onChange={handleEditarChange}
+        className="bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
+      >
+        <option value="FVP">
+          Factura Venta (FVP)
+        </option>
+
+        <option value="DESP">
+          Remisión Despacho (DESP)
+        </option>
+      </select>
+
+      <input
+        name="factura"
+        value={formEditar.factura}
+        onChange={handleEditarChange}
+        placeholder="Número factura"
+        className="bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
+      />
+
+    </div>
+
+    <div className="flex gap-3 mt-6">
+
+      <button
+        onClick={guardarEdicion}
+        className="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-6 py-3 rounded-2xl"
+      >
+        💾 Guardar
+      </button>
+
+      <button
+        onClick={() => setVentaEditando(null)}
+        className="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-2xl"
+      >
+        Cancelar
+      </button>
+
+    </div>
+
+  </div>
+
+)}
 {/* HISTORIAL DE VENTAS */}
 <div className="bg-slate-950 rounded-3xl border border-slate-800 overflow-hidden mt-8">
 
