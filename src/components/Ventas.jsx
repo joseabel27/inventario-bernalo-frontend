@@ -85,6 +85,15 @@ const guardarEdicion = async () => {
 
   try {
 
+    const subtotal = formEditar.carrito.reduce(
+  (acc, item) => acc + (item.precio * item.cantidad),
+  0
+);
+
+const iva = subtotal * 0.19;
+
+const total = subtotal + iva;
+
     const response = await fetch(
       `http://localhost:3000/api/ventas/${ventaEditando.idVenta}`,
       {
@@ -92,7 +101,12 @@ const guardarEdicion = async () => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(formEditar)
+       body: JSON.stringify({
+  ...formEditar,
+  subtotal,
+  iva,
+  total
+})
       }
     );
 
@@ -856,7 +870,87 @@ const despacharVenta = async (idVenta) => {
         className="bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
       />
 
+      
     </div>
+
+    <h3 className="text-white font-bold mt-6 mb-3">
+  📦 Productos de la factura
+</h3>
+
+<div className="space-y-2">
+  {ventaEditando.carrito?.map((item, index) => (
+
+    <div
+      key={index}
+      className="bg-slate-800 p-3 rounded-xl flex items-center gap-3"
+    >
+
+      <div className="flex-1 text-white">
+        {item.nombre}
+      </div>
+
+      <input
+        type="number"
+        min="1"
+        value={item.cantidad}
+        onChange={(e) => {
+
+          const nuevoCarrito =
+            [...ventaEditando.carrito];
+
+          nuevoCarrito[index].cantidad =
+            Number(e.target.value);
+
+          nuevoCarrito[index].subtotal =
+            nuevoCarrito[index].cantidad *
+            nuevoCarrito[index].precio;
+
+         setVentaEditando({
+  ...ventaEditando,
+  carrito: nuevoCarrito
+});
+
+setFormEditar({
+  ...formEditar,
+  carrito: nuevoCarrito
+});
+
+        }}
+        className="w-24 bg-slate-900 border border-slate-700 rounded-xl p-2 text-white"
+      />
+
+      <button
+        onClick={() => {
+
+          const nuevoCarrito =
+            ventaEditando.carrito.filter(
+              (_, i) => i !== index
+            );
+
+          setVentaEditando({
+  ...ventaEditando,
+  carrito: nuevoCarrito
+});
+
+setFormEditar({
+  ...formEditar,
+  carrito: nuevoCarrito
+});
+
+        }}
+        className="bg-red-600 hover:bg-red-500 px-3 py-2 rounded-xl text-white"
+      >
+        ❌
+      </button>
+
+    </div>
+
+  ))}
+</div>
+
+    
+
+    
 
     <div className="flex gap-3 mt-6">
 
