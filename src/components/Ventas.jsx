@@ -30,6 +30,7 @@ const [servicioManual, setServicioManual] = useState({
   cantidad: 1
 });
 const [buscarVenta, setBuscarVenta] = useState("");
+const [busquedaEditar, setBusquedaEditar] = useState("");
 const [ventaDespacho, setVentaDespacho] = useState(null);
 
 const [ventaEditando, setVentaEditando] = useState(null);
@@ -76,8 +77,61 @@ const editarVenta = (venta) => {
     ciudad: venta.ciudad,
     cliente: venta.cliente,
     tipoDocumento: venta.tipoDocumento,
-    factura: venta.factura
+    factura: venta.factura,
+    carrito: venta.carrito
   });
+
+};
+
+// ====================================
+// AGREGAR PRODUCTO A FACTURA EDITADA
+// ====================================
+const agregarProductoEdicion = (producto) => {
+
+  const existe = ventaEditando.carrito.find(
+    item => item.id === producto.id
+  );
+
+  let nuevoCarrito;
+
+  if (existe) {
+
+    nuevoCarrito = ventaEditando.carrito.map(item =>
+
+      item.id === producto.id
+        ? {
+            ...item,
+            cantidad: item.cantidad + 1,
+            subtotal: (item.cantidad + 1) * item.precio
+          }
+        : item
+
+    );
+
+  } else {
+
+    nuevoCarrito = [
+      ...ventaEditando.carrito,
+      {
+        ...producto,
+        cantidad: 1,
+        subtotal: producto.precio
+      }
+    ];
+
+  }
+
+  setVentaEditando({
+    ...ventaEditando,
+    carrito: nuevoCarrito
+  });
+
+  setFormEditar({
+    ...formEditar,
+    carrito: nuevoCarrito
+  });
+
+  setBusquedaEditar("");
 
 };
 
@@ -205,6 +259,13 @@ const handleChange = (e) => {
 
 const productosFiltrados = productos.filter((p) =>
   p.nombre.toLowerCase().includes(busqueda.toLowerCase())
+);
+
+
+const productosEditarFiltrados = productos.filter((p) =>
+  p.nombre.toLowerCase().includes(
+    busquedaEditar.toLowerCase()
+  )
 );
 
 const handleServicioChange = (e) => {
@@ -946,6 +1007,45 @@ setFormEditar({
     </div>
 
   ))}
+</div>
+
+ <h3 className="text-white font-bold mt-6 mb-3">
+  ➕ Agregar producto
+</h3>
+
+<input
+  type="text"
+  placeholder="Buscar producto..."
+  value={busquedaEditar}
+  onChange={(e) => setBusquedaEditar(e.target.value)}
+  className="w-full bg-slate-900 border border-slate-700 rounded-2xl p-3 text-white"
+/>
+
+<div className="mt-3 max-h-48 overflow-y-auto space-y-2">
+
+  {busquedaEditar !== "" &&
+    productosEditarFiltrados.map((p) => (
+
+      <div
+        key={p.id}
+        className="bg-slate-800 p-3 rounded-xl flex justify-between items-center"
+      >
+
+        <span className="text-white">
+          {p.nombre}
+        </span>
+
+        <button
+          onClick={() => agregarProductoEdicion(p)}
+          className="bg-sky-500 hover:bg-sky-400 text-black px-3 py-1 rounded-xl font-bold"
+        >
+          ➕
+        </button>
+
+      </div>
+
+    ))}
+
 </div>
 
     
