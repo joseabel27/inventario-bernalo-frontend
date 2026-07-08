@@ -1,6 +1,6 @@
 // MOSTRARA LAS VENTAS REALIZADAS
 
-import React, {useState,useEffect} from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 function Ventas(){
 
@@ -34,6 +34,8 @@ const [busquedaEditar, setBusquedaEditar] = useState("");
 const [ventaDespacho, setVentaDespacho] = useState(null);
 
 const [ventaEditando, setVentaEditando] = useState(null);
+
+const formularioEdicionRef = useRef(null);
 
 const [formEditar, setFormEditar] = useState({
   vendedor: "",
@@ -80,6 +82,15 @@ const editarVenta = (venta) => {
     factura: venta.factura,
     carrito: venta.carrito
   });
+
+   setTimeout(() => {
+
+        formularioEdicionRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }, 100);
 
 };
 
@@ -875,8 +886,10 @@ const despacharVenta = async (idVenta) => {
     </div>
 
     {ventaEditando && (
-
-  <div className="bg-slate-950 rounded-3xl border border-yellow-600 p-6 mb-8">
+  
+  <div 
+  ref={formularioEdicionRef}
+  className="bg-slate-950 rounded-3xl border border-yellow-600 p-6 mb-8">
 
     <h3 className="text-2xl font-bold text-yellow-400 mb-6">
       ✏️ Editar Factura
